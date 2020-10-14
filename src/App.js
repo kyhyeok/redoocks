@@ -1,9 +1,13 @@
 import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import UserContextProvider from "./Context";
+import Screen from "./Screen";
 
 function App() {
-  return <div></div>;
+  return (
+    <UserContextProvider>
+      <Screen />
+    </UserContextProvider>
+  );
 }
 
 export default App;
