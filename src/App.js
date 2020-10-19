@@ -1,25 +1,11 @@
 import React, { useReducer, useState } from "react";
-import { v4 as uuid } from "uuid";
-
-const initialState = {
-  toDos: []
-};
-
-const ADD = "add";
-const DEL = "del";
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case ADD:
-      return { toDos: [...state.toDos, { text: action.payload, id: uuid() }] };
-    case DEL:
-      return {
-        toDos: state.toDos.filter((toDo) => toDo.id !== action.payload)
-      };
-    default:
-      return;
-  }
-};
+import reducer, {
+  ADD,
+  COMPLETED,
+  DEL,
+  UNCOMPLETED,
+  initialState
+} from "./reducer";
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -52,11 +38,43 @@ function App() {
         {state.toDos.map((toDo, index) => (
           <li key={toDo.id}>
             <span>{toDo.text}</span>
-            <button onClick={() => dispatch({ type: DEL, payload: toDo.id })}>
+            <span
+              role="img"
+              aria-label="Delete"
+              onClick={() => dispatch({ type: DEL, payload: toDo.id })}
+            >
               ❌
-            </button>
+            </span>
+            <span
+              role="img"
+              aria-label="Completed"
+              onClick={() => dispatch({ type: COMPLETED, payload: toDo.id })}
+            >
+              ✅
+            </span>
           </li>
         ))}
+      </ul>
+      <ul>
+        {state.completed?.length !== 0 && (
+          <>
+            <h2>Completed</h2>
+            {state.completed.map((toDo, index) => (
+              <li key={toDo.id}>
+                <span>{toDo.text}</span>
+                <span
+                  role="img"
+                  aria-label="Uncompleted"
+                  onClick={() =>
+                    dispatch({ type: UNCOMPLETED, payload: toDo.id })
+                  }
+                >
+                  🙅🏼‍♂️
+                </span>
+              </li>
+            ))}
+          </>
+        )}
       </ul>
     </>
   );
