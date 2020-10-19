@@ -1,32 +1,25 @@
-import React, { useContext, useState } from "react";
+import React, { createContext, useReducer, useContext } from "react";
+import reducer, { initialState } from "./reducer";
 
-const LangContext = React.createContext();
+const ToDosContext = createContext();
 
-const Lang = ({ defaultLang, children, translations }) => {
-  const [lang, setLang] = useState(defaultLang);
-  const hyperTranslate = (text) => {
-    if (lang === defaultLang) {
-      return text;
-    } else {
-      return translations[lang][text];
-    }
-  };
-
+const ToDosProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
   return (
-    <LangContext.Provider value={{ setLang, t: hyperTranslate }}>
+    <ToDosContext.Provider value={{ state, dispatch }}>
       {children}
-    </LangContext.Provider>
+    </ToDosContext.Provider>
   );
 };
 
-export const useSetLang = () => {
-  const { setLang } = useContext(LangContext);
-  return setLang;
+export const useDispatch = () => {
+  const { dispatch } = useContext(ToDosContext);
+  return dispatch;
 };
 
-export const useT = () => {
-  const { t } = useContext(LangContext);
-  return t;
+export const useState = () => {
+  const { state } = useContext(ToDosContext);
+  return state;
 };
 
-export default Lang;
+export default ToDosProvider;
